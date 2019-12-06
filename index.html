@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400i&display=swap" rel="stylesheet">
+
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
+        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+        <script>
+            
+        </script>
+        <style>
+            body{
+                font-family: 'Open Sans', sans-serif;
+                font-family: 'Roboto', sans-serif;
+            }
+            .obcinaHover{ 
+                fill: red; 
+                }
+                
+            .map {
+                height: 92vh;
+                width: 100%;
+                }
+            nav{
+                height: 8vh;
+            }
+            nav a{
+                color: inherit;
+                font-size: 150%;
+            }
+            nav a:hover{
+                color: cyan;
+            }
+            .roboto-italic{
+                font-family: 'Open Sans', sans-serif;
+            }
+            .company-name{
+                font-size: 150%;
+                cursor: default;
+                -webkit-user-select: none; /* Safari */        
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+/Edge */
+                user-select: none; /* Standard */
+            }
+            #mySidenav{
+                position: absolute;
+                -webkit-transition: left 2s;
+                transition: left 2s;
+            }
+
+            #mySidenav a {
+                
+                z-index: 2;
+                position: absolute; 
+                left: -25vh;
+                transition: 0.3s;
+                padding: 15px;
+                width: 15vw;
+                text-decoration: none;
+                font-size: 20px;
+                color: white;
+                border-radius: 0 5px 5px 0;
+                margin-top: 30vh;
+                text-align: left;
+            }
+
+            #map{
+                z-index: 1;
+            }
+
+            #mySidenav a:hover {
+            left: 0;
+            }
+
+            #about {
+            top: 20px;
+            background-color: #477998;
+            }
+
+            #blog {
+            top: 80px;
+            background-color: #343A40;
+            }
+
+            #projects {
+            top: 140px;
+            background-color: #F64740;
+            }
+
+            #contact {
+            top: 200px;
+            background-color: #294936;
+            }
+        </style>
+    </head>
+    <body>
+            <script src="lib/bootstrap/bootstrap.min.js"></script>
+            <script src="lib/jquery-3.4.1.js"></script>
+
+            <nav class="navbar navbar-expand-md bg-dark text-white">
+                    <a class="navbar-brand" href="#"><img src="./assets/placeholder-svgrepo-com.svg" alt="Our logo" width="50px" height="50px"></a>
+                    <div class="company-name">
+                        <span class="roboto">MOJSTER</span><span class="roboto-italic text-info">MIHA</span>
+                    </div>
+                        
+                        </li>
+                      </ul>
+                    </div>
+                  </nav>
+
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]
+        <object data="./obcine.svg" type="image/svg+xml" id="alphasvg" width="50%" height="50%" style="float:left">
+
+        </object>
+    <div style="float:left;">
+
+            
+        
+        <br>
+        <h1>Ime obcine:</h1>
+        <h1 id="obcinaIme"></h1>
+    </div>
+    <div style="float:left;">
+        <h1>
+            
+        </h1>
+    </div>-->
+        <script async defer>
+            /*function mouseOverEffect() {
+                for (let path of this.querySelectorAll("path")) {
+                    path.style.fill="red";
+                }
+                document.getElementById("obcinaIme").innerText = this.attributes[1].value
+            }
+            function mouseOutEffect() {
+                for (let path of this.querySelectorAll("path")) {
+                    path.style.fill="gray";
+                }
+            }
+                let a = document.getElementById("alphasvg");
+                let svgDoc;
+                let obcine = [];
+                const css = ''; 
+                let style = document.createElement('style');
+
+                a.addEventListener("load", function(){
+                    let svgDoc = a.contentDocument.querySelector("svg");
+                    obcine = svgDoc.getElementsByTagName('g')
+                    let svg = svgDoc.getElementById("obc_001");
+                    for (let obcina of obcine) {
+                        for (let path of obcina.querySelectorAll("path")) {
+                            path.style.fill="gray";
+                        }
+                        obcina.addEventListener('mouseover', mouseOverEffect);
+                        obcina.addEventListener('mouseout', mouseOutEffect);
+                    }
+                    
+            })*/
+            
+        </script>
+
+        <div>
+                <div id="mySidenav" class="sidenav">
+                        <a href="#" id="about">Gradbena dovoljenja</a>
+                        <a href="#" id="blog">Prostorski načrt</a>
+                        <a href="#" id="projects">Zemljevid Slovenije</a>
+                        <a href="#" id="contact">O projektu</a>
+                </div>
+                <div id="map" class="map">
+                
+                </div>
+        </div>
+
+        
+        <script type="text/javascript">
+        let points = [
+            [14.082811509167142, 46.369908599697794],
+            [14.082846049242404, 46.36990284803606],
+            [14.082892225390655, 46.36997861425078],
+            [14.082811509167142, 46.369908599697794]
+            ];
+        var feature = new ol.Feature({
+            geometry: new ol.geom.Polygon([points])
+        });
+        
+        feature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+        var vectorSource= new ol.source.Vector({
+            features: [feature]
+        });
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+                ],
+                view: new ol.View({
+                center: ol.proj.fromLonLat([14.0828, 46.3699]),
+                zoom: 20
+                })
+            });
+
+            map.addLayer(vectorLayer); 
+        /*
+        var map = new ol.Map({
+                target: $('#map')[0],
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.TileJSON({
+                            url: 'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&access_token=sk.eyJ1IjoiemlnYS1zb2xhciIsImEiOiJjazNpaDZnOTEwNWhrM2t0NXR6aWI0MHg1In0.o8gMqB1CNOaTUlTIdYS9WQ'
+                        })
+                    }),
+                    vectorLayer 
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([14.0828, 46.3699]),
+                    zoom: 12
+                })
+            });
+            */
+        </script>
+    </body>
+</html>
