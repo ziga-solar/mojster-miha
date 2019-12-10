@@ -13,11 +13,16 @@
         <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400i&display=swap" rel="stylesheet">
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="http://d3js.org/topojson.v0.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
         <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+
+        <script src="./data-parser/parse-data.js"></script>
+        <script src="./GK2WGS/javasc_gk2utm.js"></script>
+
         <script>
             
         </script>
@@ -187,7 +192,15 @@
         </div>
 
         
+
+
+
+        
         <script type="text/javascript">
+        getCSV("./data/bled-parcele.csv");
+        function drawLayer(json){
+
+        }
         let points = [
             [14.082811509167142, 46.369908599697794],
             [14.082846049242404, 46.36990284803606],
