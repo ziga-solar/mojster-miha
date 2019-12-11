@@ -202,6 +202,13 @@
         var vectorSource= new ol.source.Vector({
             features: [feature]
         });
+
+        var selected_polygon_style = {
+            strokeWidth: 5,
+            strokeColor: '#ff0000'
+            // add more styling key/value pairs as your need
+        };
+
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource
         });
