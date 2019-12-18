@@ -5,6 +5,13 @@
 *
 *
 * POLYGON ((430618.8 137189.31, 430626.62 137184.58, 430626.98 137192.97, 430619.02 137195.11, 430618.8 137189.31))
+*{
+*    'type': 'Feature',
+*    'geometry': {
+*      'type': 'Polygon',
+*      'coordinates': [[[-5e6, -1e6], [-4e6, 1e6], [-3e6, -1e6]]]
+*    }
+*  }
 */
 
 // function parses MULTIPOLYGON into an array of polygons
@@ -19,7 +26,34 @@ function getCSV(path){
 }
 
 async function csvJSON(csv){
-    let cleanCSV = csv.replace("\r", '')
+    let geoJSONCollection = await {
+        'type': 'FeatureCollection',
+        'crs': {
+            'type': 'name',
+            'properties': {
+                'name': 'EPSG:3857'
+            }
+        },
+        'features': []
+    };
+    
+    let geoJSONObj = await {
+        'type': 'Feature',
+        'geometry':{
+            'type':'',
+            'coordinates': []
+        },
+        'properties':{
+            'last_change':'',
+            'plot':'',
+            'type':'',
+            'municipality':'',
+            'polyColor':''
+        }
+    };
+
+    
+    let cleanCSV = csv.replace("\r", '');
     var lines=cleanCSV.split("\n");
     var result = [];
     
@@ -30,22 +64,33 @@ async function csvJSON(csv){
     // jsfiddle showing the issue https://jsfiddle.net/
     let headers=lines[0].split(",");
 
-    for(var i=1;i<lines.length;i++){
-  
+    for(var i=1;i<lines.length-1;i++){
+        
         var obj = {};
         var currentline=lines[i].split(",",headers.length);
-        let res = lines[i].split(",",headers.length)
-        let rest = lines[i].split(',').slice(headers.length).join(',')
+        let res = lines[i].split(",",headers.length);
+        let rest = lines[i].split(',').slice(headers.length).join(',');
         res[headers.length-1] = (res[headers.length-1]+rest).replace(/["]/g,'');
         currentline = res;
         for(var j=0;j<headers.length;j++){
             obj[headers[j]] = currentline[j];
         }
-        obj.GEOMETRY = await parsePolyCoords(makePolyArray(obj.GEOMETRY))
-        result.push(obj);
+        parsedCoords = await parsePolyCoords(makePolyArray(obj.GEOMETRY));
+        obj.GEOMETRY = parsedCoords[1];
+        obj.TYPE = parsedCoords[0];
+        
+        geoJSONObj.geometry.type = await obj.TYPE;
+        geoJSONObj.geometry.coordinates = await obj.GEOMETRY;
+        geoJSONObj.properties.last_change = await obj.ZAD_SPR;
+        geoJSONObj.properties.plot = await obj.PARCELA;
+        geoJSONObj.properties.type = await obj.VRS_AKT;
+        geoJSONObj.properties.municipality = await obj.OB_ID;
+        geoJSONObj.properties.polyColor = await obj.BARVA_POLIGONA;
+        geoJSONCollection.features.push(geoJSONObj)
+        
   
     }
-    console.log(result);
+    console.log(geoJSONCollection);
     //return result; //JavaScript object
     return JSON.stringify(result); //JSON
   }
@@ -70,6 +115,7 @@ function makePolyArray(polyString){
 
 function parsePolyCoords(polyArray){
     let type = polyArray[0]
+    type = type.toLowerCase().replace(/([m])/g,'M').replace(/([p])/g,'P')
     let polyCoords = polyArray.slice(1,polyArray.length);
     for(let i = 0; i < polyCoords.length; i++){
         polyCoords[i] = polyCoords[i].split(',')
@@ -80,5 +126,5 @@ function parsePolyCoords(polyArray){
             polyCoords[i][j] = tmpSplit
         }
     }
-    return polyCoords
+    return [type, polyCoords]
 }
