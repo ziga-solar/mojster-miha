@@ -76,18 +76,18 @@ async function csvJSON(csv){
             obj[headers[j]] = currentline[j];
         }
         parsedCoords =  parsePolyCoords(makePolyArray(obj.GEOMETRY));
-        obj.GEOMETRY = parsedCoords[1];
-        obj.TYPE = parsedCoords[0];
-        console.log(obj);
-        geoJSONObj.geometry.coordinates = obj.GEOMETRY;
-        geoJSONObj.geometry.type = obj.TYPE;
-        geoJSONObj.properties.last_change =  obj.ZAD_SPR;
-        geoJSONObj.properties.plot = obj.PARCELA;
-        geoJSONObj.properties.type = obj.VRS_AKT;
-        geoJSONObj.properties.municipality =  obj.OB_ID;
-        geoJSONObj.properties.polyColor =  obj.BARVA_POLIGONA;
-        console.log(geoJSONObj);
-        geoJSONCollection.features.push(geoJSONObj);
+        if (parsedCoords !== null){
+            obj.GEOMETRY = parsedCoords[1];
+            obj.TYPE = parsedCoords[0];
+            geoJSONObj.geometry.coordinates = obj.GEOMETRY;
+            geoJSONObj.geometry.type = obj.TYPE;
+            geoJSONObj.properties.last_change =  obj.ZAD_SPR;
+            geoJSONObj.properties.plot = obj.PARCELA;
+            geoJSONObj.properties.type = obj.VRS_AKT;
+            geoJSONObj.properties.municipality =  obj.OB_ID;
+            geoJSONObj.properties.polyColor =  obj.BARVA_POLIGONA;
+            geoJSONCollection.features.push(geoJSONObj);
+        }
         
         
   
@@ -100,6 +100,9 @@ async function csvJSON(csv){
 
 
 function makePolyArray(polyString){
+    if(polyString.length == 1){
+        return null;
+    }
     let polyArray = polyString.split('(');
     let polyArrayLength = polyArray.length;
     for(let i = 0; i < polyArrayLength; i++){
@@ -109,6 +112,7 @@ function makePolyArray(polyString){
             i--;
             polyArrayLength--;
         }
+        
         polyArray[i] = polyArray[i].replace('),','')
         polyArray[i] = polyArray[i].replace(/[)]/g,'')
     }
@@ -117,6 +121,9 @@ function makePolyArray(polyString){
 }
 
 function parsePolyCoords(polyArray){
+    if(polyArray == null){
+        return null
+    }
     let type = polyArray[0]
     type = type.toLowerCase().replace(/([m])/g,'M').replace(/([p])/g,'P')
     let polyCoords = polyArray.slice(1,polyArray.length);
