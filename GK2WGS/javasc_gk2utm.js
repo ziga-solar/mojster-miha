@@ -92,7 +92,7 @@ function gk2GPS(x,y)
     fif=(fif*180)/Math.PI;
     lambdaf=(lambdaf*180)/Math.PI;
     
-    retVal=new Array(fif,lambdaf);
+    retVal=new Array(fif, lambdaf);
     
     return retVal;    
 }

@@ -37,20 +37,6 @@ async function csvJSON(csv){
         'features': []
     };
     
-    let geoJSONObj = await {
-        'type': 'Feature',
-        'geometry':{
-            'type':'',
-            'coordinates': []
-        },
-        'properties':{
-            'last_change':'',
-            'plot':'',
-            'type':'',
-            'municipality':'',
-            'polyColor':''
-        }
-    };
 
     
     let cleanCSV = csv.replace("\r", '');
@@ -65,7 +51,21 @@ async function csvJSON(csv){
     let headers=lines[0].split(",");
 
     for(var i=1;i<lines.length-1;i++){
-        
+        let geoJSONObj = {
+            'type': 'Feature',
+            'geometry':{
+                'type':'',
+                'coordinates': []
+            },
+            'properties':{
+                'last_change':'',
+                'plot':'',
+                'type':'',
+                'municipality':'',
+                'polyColor':''
+            }
+        };
+
         var obj = {};
         var currentline=lines[i].split(",",headers.length);
         let res = lines[i].split(",",headers.length);
@@ -75,24 +75,27 @@ async function csvJSON(csv){
         for(var j=0;j<headers.length;j++){
             obj[headers[j]] = currentline[j];
         }
-        parsedCoords = await parsePolyCoords(makePolyArray(obj.GEOMETRY));
+        parsedCoords =  parsePolyCoords(makePolyArray(obj.GEOMETRY));
         obj.GEOMETRY = parsedCoords[1];
         obj.TYPE = parsedCoords[0];
+        console.log(obj);
+        geoJSONObj.geometry.coordinates = obj.GEOMETRY;
+        geoJSONObj.geometry.type = obj.TYPE;
+        geoJSONObj.properties.last_change =  obj.ZAD_SPR;
+        geoJSONObj.properties.plot = obj.PARCELA;
+        geoJSONObj.properties.type = obj.VRS_AKT;
+        geoJSONObj.properties.municipality =  obj.OB_ID;
+        geoJSONObj.properties.polyColor =  obj.BARVA_POLIGONA;
+        console.log(geoJSONObj);
+        geoJSONCollection.features.push(geoJSONObj);
         
-        geoJSONObj.geometry.type = await obj.TYPE;
-        geoJSONObj.geometry.coordinates = await obj.GEOMETRY;
-        geoJSONObj.properties.last_change = await obj.ZAD_SPR;
-        geoJSONObj.properties.plot = await obj.PARCELA;
-        geoJSONObj.properties.type = await obj.VRS_AKT;
-        geoJSONObj.properties.municipality = await obj.OB_ID;
-        geoJSONObj.properties.polyColor = await obj.BARVA_POLIGONA;
-        geoJSONCollection.features.push(geoJSONObj)
         
   
     }
-    console.log(geoJSONCollection);
+    let JSONString = geoJSONCollection;
+    
     //return result; //JavaScript object
-    return JSON.stringify(result); //JSON
+    drawLayer(JSONString); //JSON
   }
 
 
@@ -123,7 +126,7 @@ function parsePolyCoords(polyArray){
             polyCoords[i][j] = polyCoords[i][j].trim()
             let tmpSplit = polyCoords[i][j].split(' ')
             tmpSplit = gk2GPS(tmpSplit[1], tmpSplit[0])
-            polyCoords[i][j] = tmpSplit
+            polyCoords[i][j] = [tmpSplit[1], tmpSplit[0]]
         }
     }
     return [type, polyCoords]
