@@ -25,8 +25,8 @@ function getCSV(path){
       })
 }
 
-async function csvJSON(csv){
-    let geoJSONCollection = await {
+ function elasticJSON(apiJSON){
+    let geoJSONCollection =  {
         'type': 'FeatureCollection',
         'crs': {
             'type': 'name',
@@ -36,21 +36,13 @@ async function csvJSON(csv){
         },
         'features': []
     };
-    
 
-    
-    let cleanCSV = csv.replace("\r", '');
-    var lines=cleanCSV.split("\n");
-    var result = [];
-    
-  
     // NOTE: If your columns contain commas in their values, you'll need
     // to deal with those before doing the next step 
     // (you might convert them to &&& or something, then covert them back later)
     // jsfiddle showing the issue https://jsfiddle.net/
-    let headers=lines[0].split(",");
-
-    for(var i=1;i<lines.length-1;i++){
+    for(var i=1;i<=apiJSON.length;i++){
+        let temp = apiJSON[i-1]
         let geoJSONObj = {
             'type': 'Feature',
             'geometry':{
@@ -66,26 +58,15 @@ async function csvJSON(csv){
             }
         };
 
-        var obj = {};
-        var currentline=lines[i].split(",",headers.length);
-        let res = lines[i].split(",",headers.length);
-        let rest = lines[i].split(',').slice(headers.length).join(',');
-        res[headers.length-1] = (res[headers.length-1]+rest).replace(/["]/g,'');
-        currentline = res;
-        for(var j=0;j<headers.length;j++){
-            obj[headers[j]] = currentline[j];
-        }
-        parsedCoords =  parsePolyCoords(makePolyArray(obj.GEOMETRY));
-        if (parsedCoords !== null){
-            obj.GEOMETRY = parsedCoords[1];
-            obj.TYPE = parsedCoords[0];
-            geoJSONObj.geometry.coordinates = obj.GEOMETRY;
-            geoJSONObj.geometry.type = obj.TYPE;
-            geoJSONObj.properties.last_change =  obj.ZAD_SPR;
-            geoJSONObj.properties.plot = obj.PARCELA;
-            geoJSONObj.properties.type = obj.VRS_AKT;
-            geoJSONObj.properties.municipality =  obj.OB_ID;
-            geoJSONObj.properties.polyColor =  obj.BARVA_POLIGONA;
+        parsedCoords =  parsePolyCoords(makePolyArray(temp.GEOMETRY));
+        if (parsedCoords !== undefined && parsedCoords[0] !== undefined){
+            geoJSONObj.geometry.coordinates = parsedCoords[1];
+            geoJSONObj.geometry.type = parsedCoords[0];
+            geoJSONObj.properties.last_change =  temp.ZAD_SPR;
+            geoJSONObj.properties.plot = temp.PARCELA;
+            geoJSONObj.properties.type = temp.VRS_AKT;
+            geoJSONObj.properties.municipality =  temp.OB_ID;
+            geoJSONObj.properties.polyColor =  temp.BARVA_POLIGONA;
             geoJSONCollection.features.push(geoJSONObj);
         }
         
@@ -93,9 +74,9 @@ async function csvJSON(csv){
   
     }
     let JSONString = geoJSONCollection;
-    
+
     //return result; //JavaScript object
-    drawLayer(JSONString); //JSON
+    return JSONString;
   }
 
 
@@ -113,19 +94,29 @@ function makePolyArray(polyString){
             polyArrayLength--;
         }
         
-        polyArray[i] = polyArray[i].replace('),','')
-        polyArray[i] = polyArray[i].replace(/[)]/g,'')
+        if (polyArray[i] !== undefined){
+            polyArray[i] = polyArray[i].replace('),','')
+            polyArray[i] = polyArray[i].replace(/[)]/g,'')
+        }
     }
-
+    if(polyArray === undefined){
+        return undefined;
+    }
     return polyArray
+    
 }
 
 function parsePolyCoords(polyArray){
     if(polyArray == null){
         return null
     }
+    if(polyArray === undefined){
+        return undefined;
+    }
     let type = polyArray[0]
-    type = type.toLowerCase().replace(/([m])/g,'M').replace(/([p])/g,'P')
+    if (type !== undefined){
+        type = type.toLowerCase().replace(/([m])/g,'M').replace(/([p])/g,'P')
+    }
     let polyCoords = polyArray.slice(1,polyArray.length);
     for(let i = 0; i < polyCoords.length; i++){
         polyCoords[i] = polyCoords[i].split(',')
