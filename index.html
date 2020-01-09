@@ -60,6 +60,22 @@
                 -ms-user-select: none; /* IE10+/Edge */
                 user-select: none; /* Standard */
             }
+
+            .close-image {
+                cursor: pointer;
+                display: block;
+                float: right;  
+                z-index: 3;
+                position: absolute; /*newly added*/
+                right: 0vw; /*newly added*/
+                top: 13vh;/*newly added*/
+                background-color: rgba(255, 255, 255, 0.7);
+                width: 15vw;
+                height: 30vh;
+                padding-left: 1vw;
+                padding-top: 1vh;
+            }
+
             #mySidenav{
                 position: absolute;
                 -webkit-transition: left 2s;
@@ -68,7 +84,7 @@
 
             #mySidenav a {
                 
-                z-index: 2;
+                z-index: 3;
                 position: absolute; 
                 left: -25vh;
                 transition: 0.3s;
@@ -109,6 +125,10 @@
             top: 200px;
             background-color: #294936;
             }
+
+            #data-box{
+            white-space: pre-line;
+            }
         </style>
     </head>
     <body>
@@ -121,70 +141,20 @@
                         <span class="roboto">MOJSTER</span><span class="roboto-italic text-info">MIHA</span>
                     </div>
                         
-                        </li>
-                      </ul>
-                    </div>
+
                   </nav>
 
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]
-        <object data="./obcine.svg" type="image/svg+xml" id="alphasvg" width="50%" height="50%" style="float:left">
-
-        </object>
-    <div style="float:left;">
-
-            
         
-        <br>
-        <h1>Ime obcine:</h1>
-        <h1 id="obcinaIme"></h1>
-    </div>
-    <div style="float:left;">
-        <h1>
-            
-        </h1>
-    </div>-->
-        <script async defer>
-            /*function mouseOverEffect() {
-                for (let path of this.querySelectorAll("path")) {
-                    path.style.fill="red";
-                }
-                document.getElementById("obcinaIme").innerText = this.attributes[1].value
-            }
-            function mouseOutEffect() {
-                for (let path of this.querySelectorAll("path")) {
-                    path.style.fill="gray";
-                }
-            }
-                let a = document.getElementById("alphasvg");
-                let svgDoc;
-                let obcine = [];
-                const css = ''; 
-                let style = document.createElement('style');
 
-                a.addEventListener("load", function(){
-                    let svgDoc = a.contentDocument.querySelector("svg");
-                    obcine = svgDoc.getElementsByTagName('g')
-                    let svg = svgDoc.getElementById("obc_001");
-                    for (let obcina of obcine) {
-                        for (let path of obcina.querySelectorAll("path")) {
-                            path.style.fill="gray";
-                        }
-                        obcina.addEventListener('mouseover', mouseOverEffect);
-                        obcina.addEventListener('mouseout', mouseOutEffect);
-                    }
-                    
-            })*/
-            
-        </script>
-
-        <div>
+        <div>  
                 <div id="mySidenav" class="sidenav">
                         <a href="#" id="about">Gradbena dovoljenja</a>
                         <a href="#" id="blog">Prostorski načrt</a>
                         <a href="#" id="projects">Zemljevid Slovenije</a>
                         <a href="#" id="contact">O projektu</a>
+                </div>
+                <div class="boxed close-image" >
+                    <span id="data-box"></span>
                 </div>
                 <div id="map" class="map">
                 
@@ -206,7 +176,7 @@
                     })
                 });
         let parsedGradbenaDovoljenja = []
-        for (let i = 1; i <= 3; i++){
+        for (let i = 1; i <= 212; i++){
             let gradbenaDovoljenja = [];
         
             $.ajax({
@@ -266,22 +236,17 @@
                 // initialize the hit variable to false (not found)
                 var hit = false;
                 e.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-                    console.log(feature.values_);
+                    let dataString = "Parcela"+
+                    "\n"+feature.values_.plot+
+                    "\nTip"+
+                    "\n"+feature.values_.type+
+                    "\nObčina"+
+                    "\n"+feature.values_.municipality;
+                    $("#data-box").html(dataString)
                 });
 
                 e.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
             });
-
-            }
-
-            
-
-            function readFeature(features){
-            //  When selected, getLength() returns 1, so selection is working.
-            //  consoleText.innerHTML = features.getLength();
-                console.log(features);
-            }
-
             map.getView().on('propertychange', function(e) {
                 switch (e.key) {
                     case 'resolution':
@@ -295,6 +260,17 @@
                         break;
                 }
             });
+            }
+
+            
+
+            function readFeature(features){
+            //  When selected, getLength() returns 1, so selection is working.
+            //  consoleText.innerHTML = features.getLength();
+                console.log(features);
+            }
+
+            
             
         </script>
     </body>
