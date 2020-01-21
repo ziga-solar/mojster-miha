@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
         <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
 
+        <script src="./data/obcine.js"></script>
         <script src="./data-parser/parse-data.js"></script>
         <script src="./GK2WGS/javasc_gk2utm.js"></script>
 
@@ -162,6 +163,8 @@
         </div>
 
         <script type="text/javascript">
+        let obcineArr = obcineArray;
+
         var map = new ol.Map({
                     target: 'map',
                     layers: [
@@ -217,7 +220,9 @@
                             fill: new ol.style.Fill({
                             color: 'rgba(0, 255, 0, 0.1)'
                             })
-                        })
+                        }),
+                        renderMode: 'image',
+                        renderer: (['webgl', 'canvas'])
                         })
             
             map.addLayer(jsonLayer);
@@ -241,7 +246,7 @@
                     "\nTip"+
                     "\n"+feature.values_.type+
                     "\nObčina"+
-                    "\n"+feature.values_.municipality;
+                    "\n"+obcineArr[feature.values_.municipality-1];
                     $("#data-box").html(dataString)
                 });
 
@@ -251,7 +256,7 @@
                 switch (e.key) {
                     case 'resolution':
                         let zoom = map.getView().getZoom()
-                        if (zoom >= 15) {
+                        if (zoom >= 15) {   
                             jsonLayer.setVisible(true);
                         }
                         else if (zoom < 15) {
